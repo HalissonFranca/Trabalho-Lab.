@@ -1,24 +1,97 @@
-# Compiled class file
-*.class
+import java.util.Scanner;
 
-# Log file
-*.log
+public class ProjetoFinal_ {
+    public static void main(String[] args) {
+        Scanner dado = new Scanner(System.in);
+        String[][] nome;
+        int[][] idade;
+        long[][] cpf;
+        String[] endereco;
+        int[] pesoFamilia;
+        int pesoTotal = 0, cesta = 13;
+        int familias, membros, acrescimoPessoa = 3;
 
-# BlueJ files
-*.ctxt
+        System.out.println("\nPROGRAMA DE ARRECADAÇÃO DE CESTAS BÁSICAS");
+        System.out.print("Quantidade de famílias a serem cadastradas: ");
+        familias = dado.nextInt();
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+        if (familias <= 0) {
+            System.out.println("Zero famílias, fim de programa.");
+        } else {
+            endereco = new String[familias];
+            nome = new String[familias][];
+            idade = new int[familias][];
+            cpf = new long[familias][];
+            pesoFamilia = new int[familias];
 
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
+            for (int i = 0; i < familias; i++) {
+                System.out.println("\nCADASTRO DE MEMBROS DA FAMÍLIA " + (i + 1));
+                System.out.print("Quantidade de membros da família " + (i + 1) + ": ");
+                membros = dado.nextInt(); // Quantidade de membros por familia
+                dado.nextLine(); // Limpar buffer
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+                while (membros <= 0) { // Validação de quantidade de membros
+                    System.out.println("Quantidade de membros da família " + (i + 1) + " (maior do que zero): ");
+                    membros = dado.nextInt(); // Quantidade de membros por familia após validado
+                }
+
+                System.out.print("Endereço da família " + (i + 1) + ": ");
+                endereco[i] = dado.nextLine(); // Endereço da família
+
+                dado.nextLine(); // Limpar buffer
+                nome[i] = new String[membros];
+                idade[i] = new int[membros];
+                cpf[i] = new long[membros];
+
+                for (int j = 0; j < membros; j++) {
+                    System.out.println("\nMEMBRO " + (j + 1));
+                    System.out.print("Nome: ");
+                    nome[i][j] = dado.nextLine(); // Nomes de membros
+
+                    while (nome[i][j].equals("")) { // Verifica se o nome está vazio
+                        System.out.print("Nome: ");
+                        nome[i][j] = dado.nextLine();
+                    }
+
+                    do {
+                        System.out.print("Idade (maior que 0): ");
+                        idade[i][j] = dado.nextInt(); // Idade dos membros
+                        dado.nextLine();
+
+                    } while (idade[i][j] <= 0); // Validação de idade
+
+                    do {
+                        System.out.print("CPF (apenas números, 11 dígitos): ");
+                        cpf[i][j] = dado.nextLong(); // Cpf do membros
+                        dado.nextLine();
+
+                    } while (cpf[i][j] <= 0 || cpf[i][j] < 10000000000L || cpf[i][j] > 99999999999L); // Validação de
+                                                                                                      // cpf
+                }
+
+                if (membros > 4) {
+                    pesoFamilia[i] = cesta + (acrescimoPessoa * (membros - 4));
+                } else {
+                    pesoFamilia[i] = cesta;
+                }
+                pesoTotal += pesoFamilia[i];
+            }
+
+            System.out.print("\n-------------------");
+            System.out.println("\nTABELA DE FAMÍLIAS");
+            System.out.println("-------------------");
+
+            for (int i = 0; i < familias; i++) {
+                System.out.println("\nFAMÍLIA " + (i + 1));
+                System.out.println("Endereço: " + endereco[i]);
+
+                for (int j = 0; j < nome[i].length; j++) {
+                    System.out.printf("Nome: %-10s | Idade: %-10s | CPF: %-10s%n",
+                            nome[i][j], idade[i][j], cpf[i][j]);
+                }
+                System.out.println("Peso da cesta básica para essa família: " + pesoFamilia[i] + " kgs");
+            }
+            System.out.println("\nQuantidade total de quilogramas a ser arrecadado: " + pesoTotal + " kg");
+        }
+    }
+}
